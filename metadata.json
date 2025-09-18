@@ -1,0 +1,5 @@
+{
+  "name": "tong hop va dua ra file ket qua tiktok chuan nhat",
+  "description": "An application to scan TikTok channels, get video lists using Apify, and transcribe video audio to text in bulk using Google's Gemini AI.",
+  "requestFramePermissions": []
+}

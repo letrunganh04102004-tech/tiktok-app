@@ -458,6 +458,7 @@ const ResultsStep = ({ videos, mp3UrlMap, transcriptStates, setTranscriptStates,
         setIsProcessing(true);
         const videosToTranscribe = videos.filter(v => mp3UrlMap[v.webVideoUrl] && !transcriptCache[v.webVideoUrl]);
         let successCount = 0;
+        const API_CALL_DELAY_MS = 4000; // Delay between API calls to prevent rate limiting (15 RPM)
 
         for (let i = 0; i < videosToTranscribe.length; i++) {
             if (stopRequest.current) {
@@ -482,6 +483,11 @@ const ResultsStep = ({ videos, mp3UrlMap, transcriptStates, setTranscriptStates,
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : 'Unknown error';
                 setTranscriptStates(prev => ({ ...prev, [url]: { status: 'error', text: `Lỗi: ${errorMessage}` }}));
+            }
+            
+            // Wait before the next request to avoid overloading the API
+            if (i < videosToTranscribe.length - 1 && !stopRequest.current) {
+                await new Promise(resolve => setTimeout(resolve, API_CALL_DELAY_MS));
             }
         }
         
